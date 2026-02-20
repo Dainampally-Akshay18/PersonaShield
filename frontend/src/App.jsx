@@ -4,6 +4,7 @@ import { AnalysisProvider } from './contexts/AnalysisContext';
 import AppLayout from './layouts/AppLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthOnlyRoute from './components/AuthOnlyRoute';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -30,7 +31,9 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/upload" element={<Upload />} />
+              <Route element={<AuthOnlyRoute />}>
+                <Route path="/upload" element={<Upload />} />
+              </Route>
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<DashboardLayout />}>
                   <Route index element={<Navigate to="/dashboard/risk-graphs" replace />} />

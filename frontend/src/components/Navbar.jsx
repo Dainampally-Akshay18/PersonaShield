@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function Navbar() {
-  const { user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -46,14 +46,14 @@ function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {user ? (
+          {isAuthenticated ? (
             <>
               <button
                 type="button"
-                onClick={() => navigate('/dashboard/risk-graphs')}
+                onClick={() => navigate('/upload')}
                 className={secondaryButtonBase}
               >
-                Dashboard
+                Upload
               </button>
               <button
                 type="button"

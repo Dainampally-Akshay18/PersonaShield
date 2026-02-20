@@ -17,6 +17,7 @@ import CorrelationDepth from './modules/CorrelationDepth';
 import VisibilityScore from './modules/VisibilityScore';
 import TimelineEstimation from './modules/TimelineEstimation';
 import WeightedRiskScore from './modules/WeightedRiskScore';
+import DigitalTwin from './modules/DigitalTwin';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                   <Route path="visibility" element={<VisibilityScore />} />
                   <Route path="timeline" element={<TimelineEstimation />} />
                   <Route path="risk-score" element={<WeightedRiskScore />} />
+                  <Route path="digital-twin" element={<DigitalTwin />} />
                 </Route>
               </Route>
             </Route>

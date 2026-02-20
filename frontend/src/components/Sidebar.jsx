@@ -106,6 +106,18 @@ function Sidebar() {
         >
           Weighted Risk Score
         </NavLink>
+        <NavLink
+          to="/dashboard/digital-twin"
+          className={({ isActive }) =>
+            `${baseLinkClasses} ${
+              isActive
+                ? 'bg-slate-800 text-white'
+                : 'text-slate-300 hover:text-slate-100'
+            }`
+          }
+        >
+          Your Digital Twin
+        </NavLink>
       </nav>
     </div>
   );

@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import AttackSimulationModal from '../components/AttackSimulationModal';
 import { useAnalysis } from '../contexts/AnalysisContext';
 
 function DashboardLayout() {
   const { analysisResult } = useAnalysis();
+  const [isSimulationOpen, setIsSimulationOpen] = useState(false);
 
   const analysisId = analysisResult?.analysis_id;
   const timestamp = analysisResult?.input_summary?.timestamp;
@@ -46,6 +49,12 @@ function DashboardLayout() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSimulationOpen(true)}
+              className="rounded-lg bg-gradient-to-r from-red-600 to-orange-600 px-4 py-2 text-sm font-semibold text-white hover:from-red-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-red-500/50"
+            >
+              Simulate Attack On Me
+            </button>
             {typeof riskScore === 'number' ? (
               <div className="inline-flex items-center rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-cyan-300">
                 Risk score
@@ -61,6 +70,11 @@ function DashboardLayout() {
         </header>
         <Outlet />
       </section>
+
+      <AttackSimulationModal
+        isOpen={isSimulationOpen}
+        onClose={() => setIsSimulationOpen(false)}
+      />
     </div>
   );
 }

@@ -675,3 +675,196 @@ LLM is used only for narrative generation (persona, phishing, explanation).
 Core scoring logic does NOT depend on LLM.
 
 
+# 🧠 MASTER ANALYSIS ENDPOINT
+
+## Endpoint
+
+```
+POST /api/v1/analyze
+```
+
+## Description
+
+Runs the complete PersonaShield pipeline in a single request.
+This endpoint orchestrates all deterministic engines and optional LLM simulations.
+
+No user data is stored. Processing is fully in-memory.
+
+---
+
+# Request
+
+Supports BOTH text and PDF (same as ingest).
+
+### Option A — Text Input
+
+```json
+{
+  "input_type": "text",
+  "content": "Full resume or profile text here...",
+  "persona": "professional_scammer",
+  "simulate_hardening": true,
+  "fields_to_remove": ["phone", "graduation_year"]
+}
+```
+
+### Option B — PDF Upload
+
+`multipart/form-data`
+
+```
+file: resume.pdf
+input_type: pdf
+persona: professional_scammer
+simulate_hardening: true
+fields_to_remove: ["phone","graduation_year"]
+```
+
+---
+
+# Internal Execution Order (For Agent)
+
+The backend MUST execute:
+
+1. Ingest → normalize text
+2. Extract entities
+3. Apply correlation rules
+4. Compute correlation depth
+5. Estimate exposure timeline
+6. Estimate public visibility
+7. Compute weighted risk score
+8. Categorize attack vectors
+9. Generate persona narrative (LLM)
+10. Generate phishing simulation (LLM)
+11. Generate explanation (LLM)
+12. Run hardening simulation (if enabled)
+13. Build risk heatmap
+
+---
+
+# Response
+
+Single structured response.
+
+```json
+{
+  "analysis_id": "uuid",
+
+  "input_summary": {
+    "input_type": "text",
+    "character_count": 4521
+  },
+
+  "entities": {
+    "emails": ["john@gmail.com"],
+    "phones": ["9876543210"],
+    "company": ["Infosys"],
+    "job_title": ["Software Engineer"],
+    "location": ["Bangalore"],
+    "skills": ["Python","React"]
+  },
+
+  "risk_assessment": {
+    "risk_score": 72,
+    "risk_level": "High",
+
+    "score_breakdown": {
+      "pii_exposure": 20,
+      "correlation": 15,
+      "inference_depth": 10,
+      "employment_exposure": 12,
+      "location_exposure": 5,
+      "timeline_exposure": 5,
+      "visibility_exposure": 5
+    },
+
+    "correlation_depth": {
+      "score": 6,
+      "chain_count": 4,
+      "average_chain_length": 1.5
+    },
+
+    "exposure_timeline_years": 8,
+    "visibility_score": 7
+  },
+
+  "attack_analysis": {
+    "attack_vectors": [
+      {
+        "category": "Spear Phishing Risk",
+        "severity": "High",
+        "contributing_factors": ["company","job_title","email"]
+      }
+    ]
+  },
+
+  "persona_simulation": {
+    "persona": "professional_scammer",
+    "narrative": "As a scammer I would impersonate..."
+  },
+
+  "phishing_simulation": {
+    "subject": "Internal Payroll Update Required",
+    "body": "Hi John, please verify...",
+    "disclaimer": "Educational simulation only."
+  },
+
+  "explanation": {
+    "summary": "Your company and role enable believable internal phishing..."
+  },
+
+  "hardening_simulation": {
+    "enabled": true,
+    "original_score": 78,
+    "hardened_score": 42,
+    "risk_reduction": 36
+  },
+
+  "visualization": {
+    "heatmap": [
+      {"data_type":"email","risk_level":"High","score":18},
+      {"data_type":"phone","risk_level":"Medium","score":10}
+    ]
+  }
+}
+```
+
+---
+
+# Important Rules For Implementation
+
+Add this under API contract:
+
+```
+• This endpoint must not call external APIs for deterministic scoring
+• LLM failures must NOT break response (fallback to empty text)
+• Response must always return risk_score even if persona/phishing fails
+• Processing target < 4 seconds
+```
+
+---
+
+# Why This Works Perfectly With Agentic IDE
+
+Because now the AI only needs to:
+
+Implement functions
+Then call them sequentially
+
+No UI orchestration
+No race conditions
+No partial failures
+
+---
+
+Now after adding this endpoint, your frontend becomes insanely simple:
+
+> Upload → POST /analyze → render dashboard
+
+That dramatically increases demo reliability.
+
+---
+
+Next I recommend I help you design the **frontend state structure** so React doesn’t become chaos.
+
+

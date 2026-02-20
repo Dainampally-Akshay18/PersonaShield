@@ -136,7 +136,11 @@ def run_comprehensive_analysis(
             try:
                 persona_result = generate_persona_narrative(
                     persona=persona,
-                    analysis_summary=f"Risk Score: {risk_score}, Attack Vectors: {len(attack_vectors)}"
+                    analysis_summary={
+                        "entities": entities,
+                        "attack_vectors": attack_vectors,
+                        "risk_score": risk_score
+                    }
                 )
                 persona_narrative = persona_result.get("narrative", "")
             except Exception as e:
@@ -171,11 +175,13 @@ def run_comprehensive_analysis(
         # STEP 12: Optional hardening simulation
         print(f"[ANALYSIS {analysis_id}] Step 12: Optional hardening simulation...")
         hardening_result = None
-        if simulate_hardening and fields_to_remove:
+        if simulate_hardening:
+            # Default fields if not provided
+            fields_to_simulate = fields_to_remove if fields_to_remove else ["phone", "graduation_year"]
             try:
                 hardening_data = run_hardening_simulation(
                     original_entities=entities,
-                    remove_fields=fields_to_remove
+                    remove_fields=fields_to_simulate
                 )
                 hardening_result = {
                     "original_score": hardening_data.get("original_score"),
@@ -190,7 +196,34 @@ def run_comprehensive_analysis(
         print(f"[ANALYSIS {analysis_id}] Step 13: Generating heatmap...")
         visualization_data = None
         try:
-            heatmap_data = generate_heatmap(score_breakdown)
+            # Calculate data type contributions from entities
+            data_type_contributions = {}
+            for entity_type, values in entities.items():
+                count = 0
+                if isinstance(values, list):
+                    count = len([v for v in values if v])
+                elif values:
+                    count = 1
+                
+                if entity_type in ["emails", "email_addresses", "email"]:
+                    data_type_contributions["email"] = count * 6
+                elif entity_type in ["phones", "phone_numbers", "phone"]:
+                    data_type_contributions["phone"] = count * 6
+                elif entity_type in ["dob", "date_of_birth"]:
+                    data_type_contributions["dob"] = count * 8
+                elif entity_type in ["companies", "company_names", "company"]:
+                    data_type_contributions["company"] = count * 5
+                elif entity_type in ["locations", "cities", "cities_lived", "location"]:
+                    data_type_contributions["location"] = count * 4
+            
+            # Construct heatmap payload
+            heatmap_input = {
+                "total_risk_score": risk_score,
+                "components": score_breakdown,
+                "data_type_contributions": data_type_contributions
+            }
+            
+            heatmap_data = generate_heatmap(heatmap_input)
             visualization_data = {
                 "summary": heatmap_data.get("summary"),
                 "severity_distribution": heatmap_data.get("severity_distribution"),

@@ -16,6 +16,7 @@ from app.api.v1.persona import router as persona_router
 from app.api.v1.phishing import router as phishing_router
 from app.api.v1.explanation import router as explanation_router
 from app.api.v1.simulation import router as simulation_router
+from app.api.v1.heatmap import router as heatmap_router
 
 router = APIRouter(prefix="/v1", tags=["v1"])
 
@@ -54,3 +55,6 @@ router.include_router(explanation_router)
 
 # Include hardening simulation endpoints
 router.include_router(simulation_router)
+
+# Include heatmap visualization endpoints
+router.include_router(heatmap_router)

@@ -1,6 +1,7 @@
 """
 Hardening simulation service.
 Simulates risk score before and after removing sensitive fields.
+Includes LLM-powered explanation of hardening impact.
 """
 
 from typing import Dict, List, Any
@@ -11,6 +12,8 @@ from app.services.correlation_depth_service import calculate_correlation_depth
 from app.services.timeline_service import calculate_timeline_exposure
 from app.services.visibility_service import calculate_visibility
 from app.services.scoring_engine import calculate_risk_score
+from app.llm.langchain_client import generate_text
+from app.llm.hardening_prompt import get_hardening_explanation_prompt
 
 
 def run_hardening_simulation(
@@ -78,10 +81,20 @@ def run_hardening_simulation(
     print(f"Risk Reduction:   {difference}")
     print("="*60 + "\n")
     
+    # Generate LLM explanation of hardening impact
+    print("\n--- GENERATING HARDENING EXPLANATION ---")
+    explanation = generate_hardening_explanation(
+        removed_fields=remove_fields,
+        original_score=original_score,
+        hardened_score=hardened_score,
+        risk_reduction=difference
+    )
+    
     return {
         "original_score": round(original_score, 1),
         "hardened_score": round(hardened_score, 1),
-        "difference": round(difference, 1)
+        "difference": round(difference, 1),
+        "explanation": explanation
     }
 
 
@@ -174,3 +187,61 @@ def _compute_risk_score(
         import traceback
         traceback.print_exc()
         return 0
+
+
+def generate_hardening_explanation(
+    removed_fields: List[str],
+    original_score: float,
+    hardened_score: float,
+    risk_reduction: float
+) -> str:
+    """
+    Generate LLM explanation of hardening impact.
+    
+    Explains why the score changed by removing certain fields.
+    Returns fallback text if LLM fails.
+    
+    Args:
+        removed_fields: List of field names that were removed
+        original_score: Original risk score
+        hardened_score: Risk score after hardening
+        risk_reduction: Difference in scores
+    
+    Returns:
+        Explanation text, or fallback if LLM fails
+    """
+    
+    try:
+        # Generate the prompt
+        prompt = get_hardening_explanation_prompt(
+            removed_fields=removed_fields,
+            original_score=original_score,
+            hardened_score=hardened_score,
+            risk_reduction=risk_reduction
+        )
+        
+        # Call LLM to generate explanation
+        explanation = generate_text(prompt)
+        
+        # If LLM returned empty string, use fallback
+        if not explanation or explanation.strip() == "":
+            return _get_fallback_hardening_explanation()
+        
+        return explanation.strip()
+    
+    except Exception as e:
+        # Log the error
+        print(f"[WARNING] Error generating hardening explanation: {str(e)}")
+        return _get_fallback_hardening_explanation()
+
+
+def _get_fallback_hardening_explanation() -> str:
+    """
+    Fallback explanation when LLM is unavailable.
+    
+    Returns:
+        Safe, generic explanation text
+    """
+    return (
+        "Removing sensitive personal details reduces attack surface and lowers exposure risk."
+    )

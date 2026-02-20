@@ -56,12 +56,18 @@ class HardeningSimulationResponse(BaseModel):
         ge=0,
         description="Risk reduction from hardening (original - hardened)"
     )
+    explanation: str = Field(
+        ...,
+        description="LLM-generated explanation of hardening impact (fallback available if LLM unavailable)"
+    )
     
     class Config:
         json_schema_extra = {
             "example": {
                 "original_score": 75.5,
                 "hardened_score": 42.3,
-                "difference": 33.2
+                "difference": 33.2,
+                "explanation": "Removing phones and graduation year significantly reduces your risk because these fields are commonly used to target and verify your identity. Phone numbers are frequently used for account recovery and two-factor authentication, making them high-value targets for attackers. Graduation year combined with other personal data like email and location makes it easier to reconstruct sensitive information. Without these fields, social engineers find it harder to craft convincing phishing attempts or impersonate you."
             }
         }
+

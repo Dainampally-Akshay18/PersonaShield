@@ -15,6 +15,7 @@ from app.api.v1.attack_vectors import router as attack_vectors_router
 from app.api.v1.persona import router as persona_router
 from app.api.v1.phishing import router as phishing_router
 from app.api.v1.explanation import router as explanation_router
+from app.api.v1.simulation import router as simulation_router
 
 router = APIRouter(prefix="/v1", tags=["v1"])
 
@@ -50,3 +51,6 @@ router.include_router(phishing_router)
 
 # Include risk explanation endpoints
 router.include_router(explanation_router)
+
+# Include hardening simulation endpoints
+router.include_router(simulation_router)

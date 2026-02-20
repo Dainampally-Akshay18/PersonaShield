@@ -11,6 +11,7 @@ from app.api.v1.scoring import router as scoring_router
 from app.api.v1.correlation_depth import router as correlation_depth_router
 from app.api.v1.timeline import router as timeline_router
 from app.api.v1.visibility import router as visibility_router
+from app.api.v1.attack_vectors import router as attack_vectors_router
 
 router = APIRouter(prefix="/v1", tags=["v1"])
 
@@ -34,3 +35,6 @@ router.include_router(timeline_router)
 
 # Include visibility endpoints
 router.include_router(visibility_router)
+
+# Include attack vectors endpoints
+router.include_router(attack_vectors_router)

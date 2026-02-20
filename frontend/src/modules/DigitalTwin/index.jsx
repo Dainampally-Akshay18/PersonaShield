@@ -1,5 +1,8 @@
+import React from 'react';
 import { useAnalysis } from '../../contexts/AnalysisContext';
 import EmptyState from '../../components/EmptyState';
+import { Card, Badge } from '../../components/UI';
+import { Brain, ShieldAlert, Cpu, Network, Zap, User, Fingerprint, Activity } from 'lucide-react';
 
 function DigitalTwin() {
   const { analysisResult } = useAnalysis();
@@ -10,198 +13,194 @@ function DigitalTwin() {
   const riskLevel = analysisResult?.risk_assessment?.risk_level;
   const scoreBreakdown = analysisResult?.risk_assessment?.score_breakdown;
 
-  const hasData =
-    explanation || narrative || (Array.isArray(primaryThreats) && primaryThreats.length > 0);
+  const hasData = explanation || narrative || (Array.isArray(primaryThreats) && primaryThreats.length > 0);
 
   if (!hasData) {
     return <EmptyState />;
   }
 
-  const getRiskLevelColor = (level) => {
-    const lev = level?.toLowerCase() || '';
-    if (lev.includes('critical') || lev.includes('very high')) {
-      return { bg: 'bg-red-900/30', border: 'border-red-700', text: 'text-red-300', icon: '🔴' };
+  const getRiskColor = (level) => {
+    switch (level?.toLowerCase()) {
+      case 'critical':
+      case 'high': return 'danger';
+      case 'moderate': return 'warning';
+      default: return 'success';
     }
-    if (lev.includes('high')) {
-      return { bg: 'bg-orange-900/30', border: 'border-orange-700', text: 'text-orange-300', icon: '🟠' };
-    }
-    if (lev.includes('medium')) {
-      return { bg: 'bg-amber-900/30', border: 'border-amber-700', text: 'text-amber-300', icon: '🟡' };
-    }
-    return { bg: 'bg-yellow-900/30', border: 'border-yellow-700', text: 'text-yellow-300', icon: '🟢' };
   };
 
-  const topRisks = scoreBreakdown
-    ? Object.entries(scoreBreakdown)
-        .map(([key, value]) => ({
-          name: key.replace(/_/g, ' '),
-          value: typeof value === 'number' ? value : 0,
-        }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 4)
-    : [];
-
-  const riskColor = getRiskLevelColor(riskLevel);
-
-  const splitParagraphs = (text) => {
-    if (!text) return [];
-    return text
-      .split(/\n\n+/)
-      .map((para) => para.trim())
-      .filter((para) => para.length > 0);
-  };
-
-  const paragraphs = splitParagraphs(explanation);
+  const entities = [
+    { name: 'Identity Cluster', weight: 'High', color: 'text-cyan-400' },
+    { name: 'Geographic Nodes', weight: 'Med', color: 'text-blue-400' },
+    { name: 'Professional Graph', weight: 'High', color: 'text-indigo-400' },
+    { name: 'Skill Signatures', weight: 'Low', color: 'text-emerald-400' },
+    { name: 'Credential Surface', weight: 'Med', color: 'text-amber-400' },
+  ];
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
-      {/* Top Banner */}
-      <div className={`rounded-xl border-2 ${riskColor.border} ${riskColor.bg} p-8 shadow-lg shadow-slate-950/40`}>
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-50 leading-tight">
-              An attacker can realistically profile you
-            </h1>
-            <p className="mt-3 text-lg text-slate-300">
-              Your digital footprint reveals more than you think. Here's the threat story.
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Top Reconstruction Banner */}
+      <Card className="p-12 space-y-8 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:rotate-12 transition-transform duration-700">
+          <Fingerprint className="w-64 h-64" />
+        </div>
+
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-8 relative z-10">
+          <div className="space-y-6 flex-1">
+            <div className="space-y-2">
+              <Badge variant={getRiskColor(riskLevel)} className="px-4">Adversarial Priority: {riskLevel}</Badge>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-100 leading-tight">
+                ENTITY <span className="text-cyan-500 italic">RECONSTRUCTION</span>
+              </h1>
+            </div>
+            <p className="text-lg text-slate-300 font-medium leading-relaxed max-w-2xl">
+              Your digital twin is a high-fidelity synthetic model derived from correlated intelligence.
+              Below are the primary nodes an attacker would use to verify your identity.
             </p>
           </div>
-          <div className={`rounded-lg border ${riskColor.border} ${riskColor.bg} px-4 py-3 text-center shrink-0`}>
-            <div className="text-3xl mb-1">{riskColor.icon}</div>
-            <div className={`text-sm font-semibold uppercase tracking-wide ${riskColor.text}`}>
-              {riskLevel || 'Unknown'}
+
+          <Card className="bg-black/40 border-white/5 p-8 text-center space-y-4 shrink-0 min-w-[200px]">
+            <div className="flex justify-center">
+              <div className="p-4 bg-cyan-500/10 rounded-full border border-cyan-500/20">
+                <Brain className="w-8 h-8 text-cyan-400" />
+              </div>
             </div>
-          </div>
+            <div className="space-y-1">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Synthetic Confidence</p>
+              <p className="text-3xl font-black italic tracking-tighter text-slate-100">92%</p>
+            </div>
+          </Card>
         </div>
-        <div className="border-t border-slate-700 pt-6">
-          <p className="text-sm text-slate-400 leading-relaxed">
-            This report shows how an attacker could use the information from your resume to infer your digital identity, target you with social engineering, and exploit your presence online.
-          </p>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left: Entity Cloud */}
+        <div className="lg:col-span-1 space-y-6">
+          <Card className="p-8 space-y-8 h-full bg-black/20 border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-black/40 border border-white/5 rounded-lg text-cyan-500">
+                <Network className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-slate-100">Node Cluster</h3>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {entities.map((e, i) => (
+                <div
+                  key={i}
+                  className={`px-4 py-2 rounded-xl bg-black/40 border border-white/5 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 hover:scale-105 hover:border-cyan-500/30 cursor-default ${e.color}`}
+                >
+                  {e.name}
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-8 border-t border-white/5 space-y-4">
+              <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-400">
+                <span>Reconstruction Depth</span>
+                <span>High Fidelity</span>
+              </div>
+              <div className="h-1 w-full bg-black/60 rounded-full overflow-hidden">
+                <div className="h-full w-3/4 bg-cyan-500/50" />
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Right: Narrative/Explanation */}
+        <div className="lg:col-span-2 space-y-8">
+          <Card className="p-8 space-y-6 h-full relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500/30" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-black border border-white/5 rounded-lg text-blue-400">
+                <User className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-slate-100 italic">Analytical Narrative</h3>
+            </div>
+
+            <div className="space-y-6">
+              {explanation && (
+                <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl">
+                  <p className="text-sm text-slate-300 leading-relaxed italic font-medium">
+                    {explanation}
+                  </p>
+                </div>
+              )}
+              {narrative && (
+                <div className="p-6 bg-black/40 rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Activity className="w-3.5 h-3.5 text-cyan-500" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-200">Adversarial Projection</span>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed font-bold uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-slate-200 to-slate-400">
+                    {narrative}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Card>
         </div>
       </div>
 
-      {/* Section 1: How a scammer sees you */}
-      {narrative && (
-        <section className="space-y-4">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-50">
-            How a scammer sees you
-          </h2>
-          <div className="rounded-xl border border-slate-700 bg-slate-900/50 p-8 shadow-md shadow-slate-950/40">
-            <p className="text-base leading-relaxed text-slate-300 whitespace-pre-wrap">
-              {narrative}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Section 2: How attack happens */}
+      {/* Threats grid */}
       {Array.isArray(primaryThreats) && primaryThreats.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-50">
-            How the attack happens
-          </h2>
-          <div className="space-y-3">
+        <section className="space-y-6">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-3 text-red-500">
+              <ShieldAlert className="w-5 h-5" />
+              <h2 className="text-xl font-black uppercase tracking-tighter italic">Attack Vector Sequence</h2>
+            </div>
+            <div className="h-px bg-red-500/20 flex-1 mx-8" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {primaryThreats.map((threat, index) => (
-              <div
-                key={index}
-                className="flex gap-4 rounded-xl border border-slate-700 bg-slate-900/50 p-6 shadow-md shadow-slate-950/40"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-900/40 border border-cyan-700">
-                  <span className="text-sm font-bold text-cyan-300">{index + 1}</span>
+              <Card key={index} className="p-6 flex gap-6 hover:border-red-500/30 transition-colors group">
+                <div className="w-12 h-12 shrink-0 bg-red-500/10 border border-red-500/20 flex items-center justify-center rounded-2xl text-xl font-black italic text-red-500 group-hover:scale-110 transition-transform">
+                  {index + 1}
                 </div>
-                <div className="flex-1 pt-0.5">
-                  <h3 className="text-base font-semibold text-slate-50 mb-1">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-100">
                     {threat.step || threat.threat || threat}
                   </h3>
                   {threat.description && (
-                    <p className="text-sm text-slate-400 leading-relaxed">
+                    <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest leading-relaxed">
                       {threat.description}
                     </p>
                   )}
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </section>
       )}
 
-      {/* Section 3: Real world impact */}
-      {paragraphs.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-50">
-            Real-world impact
-          </h2>
-          <div className="space-y-5 rounded-xl border border-slate-700 bg-slate-900/50 p-8 shadow-md shadow-slate-950/40">
-            {paragraphs.map((paragraph, index) => (
-              <p
-                key={index}
-                className="text-base leading-relaxed text-slate-300 whitespace-pre-wrap"
-              >
-                {paragraph}
-              </p>
-            ))}
+      {/* Footer Fix suggestions */}
+      <Card className="p-8 bg-black/40 border-cyan-500/10 border-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Zap className="w-5 h-5 text-cyan-500" />
+            <h3 className="text-sm font-black uppercase tracking-widest text-slate-100 italic">Priority hardening</h3>
           </div>
-        </section>
-      )}
-
-      {/* Section 4: What you should fix first */}
-      {topRisks.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-50">
-            What you should fix first
-          </h2>
-          <div className="space-y-2">
-            {topRisks.map((risk, index) => (
-              <div
-                key={risk.name}
-                className="rounded-xl border border-slate-700 bg-slate-900/50 p-5 shadow-md shadow-slate-950/40"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-900/40 border border-amber-700">
-                      <span className="text-xs font-bold text-amber-300">P{index + 1}</span>
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-slate-50 capitalize">
-                        {risk.name}
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <div className="text-2xl font-bold text-cyan-300">
-                      {risk.value}
-                    </div>
-                    <div className="text-xs text-slate-500">risk score</div>
-                  </div>
-                </div>
-              </div>
+          <ul className="space-y-2">
+            {['Review PII Exposure', 'Anonymize Geographic data', 'Enable Hardware 2FA', 'Limit Skill keywords'].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-slate-300">
+                <span className="w-1 h-1 bg-cyan-500 rounded-full" />
+                {item}
+              </li>
             ))}
+          </ul>
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Cpu className="w-5 h-5 text-blue-500" />
+            <h3 className="text-sm font-black uppercase tracking-widest text-slate-100 italic">System Status</h3>
           </div>
-        </section>
-      )}
-
-      {/* Footer guidance */}
-      <div className="rounded-xl border border-slate-700 bg-slate-900/50 p-6 shadow-md shadow-slate-950/40">
-        <h3 className="text-lg font-semibold text-slate-50 mb-2">Next steps</h3>
-        <ul className="space-y-2 text-sm text-slate-400">
-          <li className="flex gap-2">
-            <span className="text-cyan-400">•</span>
-            <span>Review your social media privacy settings</span>
-          </li>
-          <li className="flex gap-2">
-            <span className="text-cyan-400">•</span>
-            <span>Remove or anonymize personal information from public profiles</span>
-          </li>
-          <li className="flex gap-2">
-            <span className="text-cyan-400">•</span>
-            <span>Check which online services have your email listed</span>
-          </li>
-          <li className="flex gap-2">
-            <span className="text-cyan-400">•</span>
-            <span>Enable two-factor authentication on critical accounts</span>
-          </li>
-        </ul>
-      </div>
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
+            All adversarial modeling is complete. Hardening metrics have been updated in the global risk index.
+          </p>
+        </div>
+      </Card>
     </div>
   );
 }

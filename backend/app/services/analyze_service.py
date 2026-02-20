@@ -177,18 +177,23 @@ def run_comprehensive_analysis(
         hardening_result = None
         if simulate_hardening:
             # Default fields if not provided
-            fields_to_simulate = fields_to_remove if fields_to_remove else ["phone", "graduation_year"]
+            fields_to_simulate = fields_to_remove if fields_to_remove else ["phones", "email", "graduation_year", "location"]
             try:
                 hardening_data = run_hardening_simulation(
-                    original_entities=entities,
-                    remove_fields=fields_to_simulate
+                    entities,
+                    fields_to_simulate
                 )
-                hardening_result = {
-                    "original_score": hardening_data.get("original_score"),
-                    "hardened_score": hardening_data.get("hardened_score"),
-                    "difference": hardening_data.get("difference"),
-                    "explanation": hardening_data.get("explanation", "")
-                }
+                # Safe construction with defensive defaults
+                if hardening_data:
+                    hardening_result = {
+                        "original_score": hardening_data.get("original_score"),
+                        "hardened_score": hardening_data.get("hardened_score"),
+                        "difference": hardening_data.get("difference"),
+                        "explanation": hardening_data.get(
+                            "explanation",
+                            "Reducing exposed personal attributes lowers correlation risk and decreases attack surface."
+                        )
+                    }
             except Exception as e:
                 print(f"[WARNING] Hardening simulation failed: {str(e)}")
         

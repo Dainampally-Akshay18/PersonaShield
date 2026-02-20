@@ -1,0 +1,1 @@
+"""PersonaShield core module."""

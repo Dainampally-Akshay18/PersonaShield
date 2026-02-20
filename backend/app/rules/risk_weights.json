@@ -1,0 +1,14 @@
+{
+  "pii_weights": {
+    "email": 6,
+    "phone": 6,
+    "dob": 8
+  },
+  "correlation_weight": 2,
+  "depth_weight": 2,
+  "employment_weight": 2,
+  "location_weight": 1,
+  "timeline_weight": 1,
+  "visibility_weight": 1,
+  "max_score": 100
+}

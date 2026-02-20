@@ -1,0 +1,104 @@
+{
+  "correlation_rules": [
+    {
+      "rule_id": "PERSONAL_IDENTITY_RISK",
+      "risk_type": "Personal Identity Exposure",
+      "description": "Personal identity exposure through multiple contact methods and DOB",
+      "severity": 9,
+      "condition": {
+        "required_fields": ["emails", "phones", "dob"]
+      },
+      "pathway": ["dob", "emails", "phones"]
+    },
+    {
+      "rule_id": "PROFESSIONAL_BACKGROUND_RISK",
+      "risk_type": "Professional Background Exposure",
+      "description": "Complete professional profile exposure",
+      "severity": 8,
+      "condition": {
+        "required_fields": ["college", "graduation_year", "company", "job_title"]
+      },
+      "pathway": ["college", "graduation_year", "company", "job_title"]
+    },
+    {
+      "rule_id": "FAMILY_CONTACT_LEAK",
+      "risk_type": "Family Information Leak",
+      "description": "Family information linked with contact details",
+      "severity": 7,
+      "condition": {
+        "required_fields": ["family_mentions", "emails"]
+      },
+      "pathway": ["family_mentions", "emails"]
+    },
+    {
+      "rule_id": "LOCATION_PRIVACY_BREACH",
+      "risk_type": "Location Privacy Compromise",
+      "description": "Location information combined with work and contact details",
+      "severity": 7,
+      "condition": {
+        "required_fields": ["location", "company", "emails"]
+      },
+      "pathway": ["location", "company", "emails"]
+    },
+    {
+      "rule_id": "SKILL_EXPERIENCE_LEAK",
+      "risk_type": "Technical Profile Leakage",
+      "description": "Technical profile exposure through skills and experience",
+      "severity": 6,
+      "condition": {
+        "required_fields": ["skills", "job_title"]
+      },
+      "pathway": ["skills", "job_title"]
+    },
+    {
+      "rule_id": "CERTIFICATION_EMPLOYMENT_LINK",
+      "risk_type": "Certification-Employment Correlation",
+      "description": "Certifications linked with employment details",
+      "severity": 6,
+      "condition": {
+        "required_fields": ["certifications", "company", "job_title"]
+      },
+      "pathway": ["certifications", "company", "job_title"]
+    },
+    {
+      "rule_id": "FULL_CAREER_TRAJECTORY",
+      "risk_type": "Career Trajectory Exposure",
+      "description": "Complete career path exposed",
+      "severity": 8,
+      "condition": {
+        "required_fields": ["college", "graduation_year", "company", "job_title", "skills"]
+      },
+      "pathway": ["college", "graduation_year", "company", "job_title", "skills"]
+    },
+    {
+      "rule_id": "PERSONAL_CONTACT_CONVERGENCE",
+      "risk_type": "Contact Information Convergence",
+      "description": "Personal identity convergence from multiple contact channels",
+      "severity": 8,
+      "condition": {
+        "required_fields": ["emails", "phones", "location"]
+      },
+      "pathway": ["emails", "phones", "location"]
+    },
+    {
+      "rule_id": "PROFESSIONAL_SKILL_TARGETING",
+      "risk_type": "Professional Targeting Risk",
+      "description": "Highly specific professional profile for targeting",
+      "severity": 7,
+      "condition": {
+        "required_fields": ["job_title", "skills", "certifications"]
+      },
+      "pathway": ["job_title", "skills", "certifications"]
+    },
+    {
+      "rule_id": "GOVERNMENT_ID_RISK",
+      "risk_type": "Government ID Reconstruction Risk",
+      "description": "Potential government ID reconstruction risk",
+      "severity": 9,
+      "condition": {
+        "required_fields": ["dob", "phones", "location"]
+      },
+      "pathway": ["dob", "phones", "location"]
+    }
+  ]
+}

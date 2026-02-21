@@ -122,7 +122,7 @@ function WeightedRiskScore() {
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-black italic tracking-tighter text-slate-100">{item.value.toFixed(1)}</span>
-                <span className="text-[10px] font-mono text-slate-400">/ 25.0</span>
+                <span className="text-[10px] font-mono text-slate-400">/ 100.0</span>
               </div>
               <div className="h-0.5 w-full bg-black/60 rounded-full overflow-hidden">
                 <div className="h-full bg-cyan-500/50" style={{ width: `${(item.value / 25) * 100}%` }} />

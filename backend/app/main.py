@@ -29,7 +29,7 @@ app.include_router(api_router)
 
 
 # Health check endpoint
-@app.get("/")
+@app.get("/health")
 async def health_check():
     """Health check endpoint."""
     return {"status": "PersonaShield backend running"}

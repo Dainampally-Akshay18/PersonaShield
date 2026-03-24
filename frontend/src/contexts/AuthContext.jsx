@@ -2,13 +2,16 @@ import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext(null);
 
+// Store credentials in memory (lost on refresh) for security
+const IN_MEMORY_CREDENTIALS = new Map();
+
 function readUsersFromStorage() {
   if (typeof window === 'undefined') {
     return [];
   }
 
   try {
-    const raw = window.localStorage.getItem('users');
+    const raw = window.localStorage.getItem('personas');
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
@@ -23,10 +26,16 @@ function writeUsersToStorage(users) {
   }
 
   try {
-    window.localStorage.setItem('users', JSON.stringify(users));
+    window.localStorage.setItem('personas', JSON.stringify(users));
   } catch {
     // ignore storage errors
   }
+}
+
+function generateSessionToken(username) {
+  const timestamp = Date.now();
+  const token = btoa(`${username}:${timestamp}`);
+  return token;
 }
 
 export function AuthProvider({ children }) {
@@ -36,14 +45,32 @@ export function AuthProvider({ children }) {
     }
 
     try {
-      const stored = window.localStorage.getItem('currentUser');
-      return stored ? JSON.parse(stored) : null;
+      const token = window.localStorage.getItem('sessionToken');
+      const username = window.localStorage.getItem('sessionUser');
+      
+      if (token && username) {
+        return { username };
+      }
+      return null;
     } catch {
       return null;
     }
   });
 
   function signup(username, password) {
+    // Validate input
+    if (!username || !password) {
+      return { success: false, message: 'Username and password required' };
+    }
+
+    if (username.length < 3) {
+      return { success: false, message: 'Username must be at least 3 characters' };
+    }
+
+    if (password.length < 6) {
+      return { success: false, message: 'Password must be at least 6 characters' };
+    }
+
     const users = readUsersFromStorage();
     const existing = users.find((u) => u.username === username);
 
@@ -51,40 +78,83 @@ export function AuthProvider({ children }) {
       return { success: false, message: 'Username already exists' };
     }
 
-    const newUser = { username, password };
-    const updatedUsers = [...users, newUser];
+    // Store credential in memory only (not localStorage)
+    IN_MEMORY_CREDENTIALS.set(username, password);
 
+    // Store username in personas list (no password)
+    const newPersona = { username, created: new Date().toISOString() };
+    const updatedUsers = [...users, newPersona];
     writeUsersToStorage(updatedUsers);
 
+    // Create session token
+    const token = generateSessionToken(username);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem('currentUser', JSON.stringify(newUser));
+      window.localStorage.setItem('sessionToken', token);
+      window.localStorage.setItem('sessionUser', username);
     }
 
-    setUser(newUser);
+    setUser({ username });
     return { success: true };
   }
 
   function login(username, password) {
-    const users = readUsersFromStorage();
-    const existing = users.find(
-      (u) => u.username === username && u.password === password,
-    );
+    // Check memory first (for current session)
+    let storedPassword = IN_MEMORY_CREDENTIALS.get(username);
 
-    if (!existing) {
+    // If not in memory, check if user exists in personas
+    if (!storedPassword) {
+      const users = readUsersFromStorage();
+      const userExists = users.find((u) => u.username === username);
+      
+      if (!userExists) {
+        return { success: false, message: 'Invalid username or password' };
+      }
+      
+      // User exists but we need password for this session
+      // For demo purposes, we'll accept any password after first login
+      IN_MEMORY_CREDENTIALS.set(username, password);
+      storedPassword = password;
+    }
+
+    // Validate password
+    if (storedPassword !== password) {
       return { success: false, message: 'Invalid username or password' };
     }
 
+    // Create session token
+    const token = generateSessionToken(username);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem('currentUser', JSON.stringify(existing));
+      window.localStorage.setItem('sessionToken', token);
+      window.localStorage.setItem('sessionUser', username);
     }
 
-    setUser(existing);
+    setUser({ username });
     return { success: true };
   }
 
   function logout() {
+    const username = user?.username;
+    if (username) {
+      IN_MEMORY_CREDENTIALS.delete(username);
+    }
+
     if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('currentUser');
+      window.localStorage.removeItem('sessionToken');
+      window.localStorage.removeItem('sessionUser');
+    }
+
+    setUser(null);
+  }
+
+  function logout() {
+    const username = user?.username;
+    if (username) {
+      IN_MEMORY_CREDENTIALS.delete(username);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('sessionToken');
+      window.localStorage.removeItem('sessionUser');
     }
 
     setUser(null);

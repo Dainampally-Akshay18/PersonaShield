@@ -313,27 +313,5 @@ Keeps services clean.
 
 ---
 
-# 🏆 Why This Wins
 
-Because this looks like:
-
-AI-powered Cyber Risk Intelligence Engine
-
-Not:
-
-Resume analyzer demo.
-
-You now have:
-
-• Deterministic scoring
-• Explainable AI
-• Persona modeling
-• Risk simulation
-• Graph-ready outputs
-• Enterprise toggle support
-• Modular architecture
-
-This is top 1% structure.
-
----
 

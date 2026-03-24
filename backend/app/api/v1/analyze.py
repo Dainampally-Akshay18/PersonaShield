@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, status, UploadFile, File, Form
 from typing import List, Optional
 from pydantic import BaseModel
 from app.services.analyze_service import run_comprehensive_analysis
+from app.services.scraping_service import scrape_url_content
 
 
 router = APIRouter()
@@ -98,7 +99,7 @@ async def analyze_text(request: TextAnalysisRequest) -> dict:
 async def analyze_pdf(
     file: UploadFile = File(...),
     persona: Optional[str] = Form("professional_scammer"),
-    simulate_hardening: Optional[bool] = Form(False),
+    simulate_hardening: Optional[str] = Form("false"),
     fields_to_remove: Optional[str] = Form(None)
 ) -> dict:
     """
@@ -146,6 +147,9 @@ async def analyze_pdf(
                 detail=f"persona must be one of: {', '.join(valid_personas)}"
             )
         
+        # Convert string boolean to actual boolean
+        hardening_bool = simulate_hardening and simulate_hardening.lower() == 'true'
+        
         # Parse fields_to_remove from comma-separated string
         parsed_fields: Optional[List[str]] = None
         if fields_to_remove:
@@ -160,7 +164,7 @@ async def analyze_pdf(
             content=None,
             file_bytes=file_bytes,
             persona=persona,
-            simulate_hardening=simulate_hardening,
+            simulate_hardening=hardening_bool,
             fields_to_remove=parsed_fields
         )
         
@@ -172,4 +176,93 @@ async def analyze_pdf(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error analyzing PDF: {str(e)}"
+        )
+
+
+class URLScrapeRequest(BaseModel):
+    """Request schema for URL scraping."""
+    url: str
+    analyze: bool = True
+    persona: Optional[str] = "professional_scammer"
+
+
+@router.post(
+    "/scrape/url",
+    status_code=status.HTTP_200_OK,
+    summary="Scrape and Analyze URL Content",
+    tags=["Analysis"],
+)
+async def scrape_and_analyze_url(request: URLScrapeRequest) -> dict:
+    """
+    Scrape content from a URL and optionally analyze it.
+    
+    **Request:**
+    - `url` (required): The URL to scrape
+    - `analyze` (optional): Whether to run full analysis (default: true)
+    - `persona`: Optional persona type for analysis
+    
+    **Returns:**
+    URL metadata, scraped content, and optionally full risk analysis.
+    
+    **Example curl:**
+    ```bash
+    curl -X POST http://localhost:8000/api/v1/scrape/url \\
+      -H "Content-Type: application/json" \\
+      -d '{
+        "url": "https://linkedin.com/in/example",
+        "analyze": true,
+        "persona": "professional_scammer"
+      }'
+    ```
+    """
+    
+    try:
+        # Validate URL
+        if not request.url or not request.url.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="url is required and cannot be empty"
+            )
+        
+        # Scrape URL content
+        scrape_result = scrape_url_content(request.url)
+        
+        # If analyze is True, perform comprehensive analysis
+        if request.analyze:
+            analysis_result = run_comprehensive_analysis(
+                input_type="text",
+                content=scrape_result["scraped_content"],
+                file_bytes=None,
+                persona=request.persona,
+                simulate_hardening=False,
+                fields_to_remove=None
+            )
+            
+            return {
+                "scrape_metadata": {
+                    "source_url": scrape_result.get("source_url"),
+                    "status": scrape_result.get("status"),
+                    "character_count": scrape_result.get("character_count", 0),
+                    "message": scrape_result.get("message")
+                },
+                "analysis": analysis_result
+            }
+        else:
+            # Return just the scraped content
+            return {
+                "scrape_metadata": {
+                    "source_url": scrape_result.get("source_url"),
+                    "status": scrape_result.get("status"),
+                    "character_count": scrape_result.get("character_count", 0),
+                    "message": scrape_result.get("message")
+                },
+                "scraped_content": scrape_result.get("scraped_content")
+            }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error scraping URL: {str(e)}"
         )

@@ -25,19 +25,19 @@ function RiskGraphs() {
     value: typeof value === 'number' ? value : 0,
   }));
 
-  const colors = ['#38bdf8', '#34d399', '#fbbf24', '#f43f5e', '#818cf8', '#e879f9'];
+  const colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#6366f1', '#ec4899'];
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Bar Chart Analysis */}
-        <Card className="p-8 space-y-6">
+        <Card className="p-8 space-y-6 bg-white border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
-                <BarChart3 className="w-5 h-5 text-cyan-500" />
+              <div className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+                <BarChart3 className="w-5 h-5 text-blue-600" />
               </div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-slate-100">Factor Distribution</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Factor Distribution</h3>
             </div>
             <Badge variant="primary">Heuristic Logic</Badge>
           </div>
@@ -47,32 +47,32 @@ function RiskGraphs() {
               <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 40 }}>
                 <defs>
                   <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.2} />
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#dbeafe" stopOpacity={0.4} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis
                   dataKey="name"
-                  stroke="#475569"
+                  stroke="#64748b"
                   fontSize={10}
                   fontWeight="bold"
                   angle={-45}
                   textAnchor="end"
                   height={60}
-                  tick={{ fill: '#94a3b8' }}
+                  tick={{ fill: '#64748b' }}
                 />
-                <YAxis stroke="#475569" fontSize={10} fontWeight="bold" tick={{ fill: '#94a3b8' }} />
+                <YAxis stroke="#64748b" fontSize={10} fontWeight="bold" tick={{ fill: '#64748b' }} />
                 <Tooltip
-                  cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
                   contentStyle={{
-                    backgroundColor: '#000000',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
                     borderRadius: '12px',
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.6)'
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                   }}
-                  itemStyle={{ color: '#06b6d4', fontSize: '12px', fontWeight: 'bold' }}
-                  labelStyle={{ color: '#94a3b8', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px' }}
+                  itemStyle={{ color: '#2563eb', fontSize: '12px', fontWeight: 'bold' }}
+                  labelStyle={{ color: '#64748b', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px' }}
                 />
                 <Bar dataKey="value" fill="url(#barGradient)" radius={[6, 6, 0, 0]} />
               </BarChart>
@@ -81,13 +81,13 @@ function RiskGraphs() {
         </Card>
 
         {/* Pie Chart Analysis */}
-        <Card className="p-8 space-y-6">
+        <Card className="p-8 space-y-6 bg-white border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
-                <PieIcon className="w-5 h-5 text-indigo-400" />
+              <div className="p-2 bg-indigo-50 rounded-lg border border-indigo-200">
+                <PieIcon className="w-5 h-5 text-indigo-600" />
               </div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-slate-100">Weighted Contribution</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Weighted Contribution</h3>
             </div>
             <Badge>Correlation Weight</Badge>
           </div>
@@ -111,17 +111,17 @@ function RiskGraphs() {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#000000',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
                     borderRadius: '12px'
                   }}
-                  itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                  itemStyle={{ fontSize: '12px', fontWeight: 'bold', color: '#1f2937' }}
                 />
                 <Legend
                   verticalAlign="bottom"
                   align="center"
                   iconType="circle"
-                  formatter={(value) => <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300 ml-2">{value}</span>}
+                  formatter={(value) => <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700 ml-2">{value}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -130,31 +130,31 @@ function RiskGraphs() {
       </div>
 
       {/* Numerical Breakdown table */}
-      <Card className="overflow-hidden">
-        <div className="p-6 border-b border-white/5 bg-black/40 flex items-center justify-between">
+      <Card className="overflow-hidden bg-white border-slate-200">
+        <div className="p-6 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Activity className="w-5 h-5 text-cyan-500" />
-            <h3 className="text-sm font-black uppercase tracking-widest text-slate-100">Entity Score Matrix</h3>
+            <Activity className="w-5 h-5 text-blue-600" />
+            <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Entity Score Matrix</h3>
           </div>
           <div className="flex items-center gap-2">
-            <Info className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 italic">Score values are normalized to 100-max heuristic scale</span>
+            <Info className="w-3.5 h-3.5 text-slate-600" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 italic">Score values are normalized to 100-max heuristic scale</span>
           </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-black/40 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">
+              <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">
                 <th className="px-8 py-4">Risk Factor Identifier</th>
                 <th className="px-8 py-4">Status</th>
                 <th className="px-8 py-4 text-right">Heuristic Score</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-200">
               {Object.entries(scoreBreakdown).map(([key, value], i) => (
-                <tr key={key} className="hover:bg-white/5 transition-colors group">
+                <tr key={key} className="hover:bg-slate-50 transition-colors group">
                   <td className="px-8 py-4">
-                    <span className="text-xs font-bold text-slate-300 group-hover:text-cyan-400 transition-colors uppercase tracking-widest">
+                    <span className="text-xs font-bold text-slate-700 group-hover:text-blue-600 transition-colors uppercase tracking-widest">
                       {key.replace(/_/g, ' ')}
                     </span>
                   </td>
@@ -164,7 +164,7 @@ function RiskGraphs() {
                     </Badge>
                   </td>
                   <td className="px-8 py-4 text-right">
-                    <span className="font-mono text-sm font-black text-slate-100 italic">
+                    <span className="font-mono text-sm font-black text-slate-900 italic">
                       {value?.toFixed(2)}
                     </span>
                   </td>

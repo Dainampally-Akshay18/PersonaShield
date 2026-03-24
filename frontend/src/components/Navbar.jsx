@@ -23,7 +23,7 @@ function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass border-b border-white/5">
+    <nav className="fixed top-0 w-full z-50 glass border-b border-slate-200 bg-white shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 h-16">
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2 group">
@@ -37,11 +37,11 @@ function Navbar() {
               }}
             />
             <div className="hidden items-center gap-2">
-              <div className="p-2 bg-sky-500 rounded-lg shadow-lg shadow-sky-500/20">
-                <Shield className="w-5 h-5 text-black" />
+              <div className="p-2 bg-blue-600 rounded-lg shadow-md shadow-blue-200">
+                <Shield className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-black tracking-tighter text-slate-100 uppercase italic lead-none">
-                Persona<span className="text-sky-400">Shield</span>
+              <span className="text-xl font-black tracking-tighter text-slate-900 uppercase italic lead-none">
+                Persona<span className="text-blue-600">Shield</span>
               </span>
             </div>
           </Link>
@@ -76,20 +76,20 @@ function Navbar() {
 
         <div className="flex items-center gap-6">
           {/* Tactical Status Indicator */}
-          <div className="hidden xl:flex items-center gap-3 px-4 py-1.5 bg-black/40 border border-white/5 rounded-full">
+          <div className="hidden xl:flex items-center gap-3 px-4 py-1.5 bg-slate-100 border border-slate-200 rounded-full">
             <div className="flex items-center gap-1.5">
-              <Zap className="w-3 h-3 text-sky-400" />
-              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Surface Magnitude</span>
+              <Zap className="w-3 h-3 text-blue-600" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-slate-600">System Status</span>
             </div>
-            <div className="w-[1px] h-3 bg-white/10" />
-            <span className="text-[10px] font-mono font-bold text-sky-400 animate-pulse">4.2 TB/s</span>
+            <div className="w-[1px] h-3 bg-slate-300" />
+            <span className="text-[10px] font-mono font-bold text-blue-600">Active</span>
           </div>
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
-              <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-                  Secure Node: <span className="text-slate-100">{user?.username}</span>
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                  Logged in: <span className="text-slate-900">{user?.username}</span>
                 </span>
               </div>
               <Button size="sm" onClick={() => navigate('/upload')} variant="secondary" className="gap-2">

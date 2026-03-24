@@ -27,34 +27,34 @@ function AttackVectors() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8">
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 border-red-500/20 bg-red-500/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
-            <AlertTriangle className="w-16 h-16 text-red-500" />
+        <Card className="p-6 border-red-200 bg-red-50 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:scale-110 transition-transform duration-500">
+            <AlertTriangle className="w-16 h-16 text-red-600" />
           </div>
           <div className="space-y-1 relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-400">High Severity</p>
-            <h4 className="text-3xl font-black text-slate-100 italic">{severityStats.high}</h4>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-700">High Severity</p>
+            <h4 className="text-3xl font-black text-slate-900 italic">{severityStats.high}</h4>
           </div>
         </Card>
-        <Card className="p-6 border-amber-500/20 bg-amber-500/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
-            <Zap className="w-16 h-16 text-amber-500" />
+        <Card className="p-6 border-amber-200 bg-amber-50 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:scale-110 transition-transform duration-500">
+            <Zap className="w-16 h-16 text-amber-600" />
           </div>
           <div className="space-y-1 relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">Medium Severity</p>
-            <h4 className="text-3xl font-black text-slate-100 italic">{severityStats.medium}</h4>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700">Medium Severity</p>
+            <h4 className="text-3xl font-black text-slate-900 italic">{severityStats.medium}</h4>
           </div>
         </Card>
-        <Card className="p-6 border-emerald-500/20 bg-emerald-500/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
-            <ShieldCheck className="w-16 h-16 text-emerald-500" />
+        <Card className="p-6 border-emerald-200 bg-emerald-50 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-15 group-hover:scale-110 transition-transform duration-500">
+            <ShieldCheck className="w-16 h-16 text-emerald-600" />
           </div>
           <div className="space-y-1 relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Low Severity</p>
-            <h4 className="text-3xl font-black text-slate-100 italic">{severityStats.low}</h4>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700">Low Severity</p>
+            <h4 className="text-3xl font-black text-slate-900 italic">{severityStats.low}</h4>
           </div>
         </Card>
       </div>
@@ -72,31 +72,31 @@ function AttackVectors() {
 
           return (
             <Card key={index} className="flex flex-col group" hover>
-              <div className="p-6 border-b border-white/5 flex items-start justify-between gap-4">
+              <div className="p-6 border-b border-slate-200 flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-lg bg-black border border-white/5 transition-transform duration-500 group-hover:-rotate-6 shadow-xl shadow-black/40`}>
-                    <Icon className={`w-5 h-5 ${sev.color === 'danger' ? 'text-red-500' : sev.color === 'warning' ? 'text-amber-500' : 'text-emerald-500'}`} />
+                  <div className={`p-2.5 rounded-lg bg-slate-100 border border-slate-300 transition-transform duration-500 group-hover:-rotate-6 shadow-sm shadow-slate-200`}>
+                    <Icon className={`w-5 h-5 ${sev.color === 'danger' ? 'text-red-600' : sev.color === 'warning' ? 'text-amber-600' : 'text-emerald-600'}`} />
                   </div>
-                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-100 leading-tight">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 leading-tight">
                     {vector.category || 'Unknown Vector'}
                   </h3>
                 </div>
                 <Badge variant={sev.color}>{sev.label}</Badge>
               </div>
 
-              <div className="p-6 flex-1 space-y-4 bg-black/40">
-                <p className="text-xs text-slate-300 font-medium leading-relaxed italic">
+              <div className="p-6 flex-1 space-y-4 bg-slate-50">
+                <p className="text-xs text-slate-700 font-medium leading-relaxed italic">
                   Synthesized probability factor based on correlated persona data.
                 </p>
 
                 {factors.length > 0 && (
                   <div className="space-y-3">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 flex items-center gap-2">
-                      <ChevronRight className="w-3 h-3 text-cyan-500" /> Contributing Factors
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-700 flex items-center gap-2">
+                      <ChevronRight className="w-3 h-3 text-blue-600" /> Contributing Factors
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {factors.map((f, fi) => (
-                        <span key={fi} className="px-3 py-1 bg-black/60 border border-white/5 rounded-md text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                        <span key={fi} className="px-3 py-1 bg-white border border-slate-300 rounded-md text-[10px] font-bold text-slate-700 uppercase tracking-wider">
                           {f}
                         </span>
                       ))}

@@ -40,18 +40,18 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6">
-      <Card className="w-full max-w-md p-8 space-y-8 relative overflow-hidden">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+      <Card className="w-full max-w-md p-8 space-y-8 relative overflow-hidden bg-white border-slate-200">
         <div className="absolute top-0 right-0 p-4 opacity-5">
           <UserPlus className="w-32 h-32 rotate-12" />
         </div>
 
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20 mb-2">
-            <ShieldCheck className="w-6 h-6 text-cyan-400" />
+          <div className="inline-flex p-3 bg-blue-500/10 rounded-xl border border-blue-500/20 mb-2">
+            <ShieldCheck className="w-6 h-6 text-blue-600" />
           </div>
-          <h2 className="text-2xl font-black tracking-tight text-slate-100 uppercase">Node Registration</h2>
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
+          <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase">Node Registration</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-700">
             Create your Adversarial Profiling Identity
           </p>
         </div>
@@ -85,15 +85,15 @@ const Signup = () => {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 items-center">
-              <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-              <p className="text-[10px] font-bold uppercase tracking-widest text-red-400">{error}</p>
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-3 items-center">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+              <p className="text-[10px] font-bold uppercase tracking-widest text-red-700">{error}</p>
             </div>
           )}
 
           <Button
             type="submit"
-            className="w-full h-12 gap-2 text-sm font-black uppercase tracking-widest shadow-xl shadow-cyan-500/20"
+            className="w-full h-12 gap-2 text-sm font-black uppercase tracking-widest shadow-md shadow-blue-300"
             disabled={isLoading}
           >
             {isLoading ? 'Registering...' : 'Establish Node'}
@@ -102,8 +102,8 @@ const Signup = () => {
         </form>
 
         <div className="text-center">
-          <p className="text-xs text-slate-400 font-medium tracking-wide">
-            Already have an active system node? <Link to="/login" className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors">Authenticate</Link>
+          <p className="text-xs text-slate-700 font-medium tracking-wide">
+            Already have an active system node? <Link to="/login" className="text-blue-600 hover:text-blue-700 font-bold transition-colors">Authenticate</Link>
           </p>
         </div>
       </Card>

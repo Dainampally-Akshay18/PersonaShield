@@ -64,7 +64,7 @@ def extract_text_from_pdf(file_content: bytes) -> str:
         
         # Handle empty PDF - return empty string instead of crashing
         if len(reader.pages) == 0:
-            return ""
+            raise ValueError("PDF file appears to be empty or has no readable text content")
         
         # Extract text from all pages
         extracted_text = ""
@@ -80,10 +80,11 @@ def extract_text_from_pdf(file_content: bytes) -> str:
         # Normalize the extracted text
         if extracted_text.strip():
             normalized_text = normalize_text(extracted_text)
+            return normalized_text
         else:
-            normalized_text = ""
-        
-        return normalized_text
+            raise ValueError("PDF file contains no extractable text content")
     
+    except ValueError:
+        raise
     except Exception as e:
         raise ValueError(f"Failed to process PDF: {str(e)}")

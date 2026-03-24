@@ -1,24 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #38bdf8;
-    --color-background: #000000;
-    --color-foreground: #ffffff;
+    --color-primary: #3b82f6;
+    --color-background: #ffffff;
+    --color-foreground: #1f2937;
 }
 
 @layer base {
     body {
-        @apply bg-black text-slate-100 font-sans antialiased;
+        @apply bg-white text-slate-900 font-sans antialiased;
         font-weight: 450;
-        background-image: radial-gradient(circle at 50% -20%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
-            radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.02) 0%, transparent 40%);
-        background-attachment: fixed;
     }
 }
 
 @layer components {
     .glass {
-        @apply bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/60;
+        @apply bg-white/80 backdrop-blur-md border border-slate-200 shadow-sm shadow-slate-200/50;
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -30,56 +27,20 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        @apply bg-slate-800 rounded-full hover:bg-slate-700;
+        @apply bg-slate-300 rounded-full hover:bg-slate-400;
     }
 }
 
-@keyframes float {
-
+@keyframes subtle-shift {
     0%,
     100% {
         transform: translateY(0);
     }
-
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-4px);
     }
 }
 
-@keyframes pulse-slow {
-
-    0%,
-    100% {
-        opacity: 0.3;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.5;
-        transform: scale(1.05);
-    }
-}
-
-@keyframes blink {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0;
-    }
-}
-
-.animate-blink {
-    animation: blink 1s step-end infinite;
-}
-
-.animate-float {
-    animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-    animation: pulse-slow 8s ease-in-out infinite;
+.animate-subtle-shift {
+    animation: subtle-shift 3s ease-in-out infinite;
 }

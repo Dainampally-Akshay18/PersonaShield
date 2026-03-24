@@ -23,25 +23,25 @@ function WeightedRiskScore() {
   })).sort((a, b) => b.value - a.value);
 
   const riskLevel = riskScore > 75 ? 'Critical' : riskScore > 50 ? 'High' : riskScore > 25 ? 'Moderate' : 'Low';
-  const riskColor = riskLevel === 'Critical' ? 'text-red-500' : riskLevel === 'High' ? 'text-amber-500' : 'text-cyan-500';
+  const riskColor = riskLevel === 'Critical' ? 'text-red-600' : riskLevel === 'High' ? 'text-amber-600' : 'text-blue-600';
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Risk Hero Card */}
-        <Card className="lg:col-span-1 p-10 flex flex-col items-center justify-center text-center space-y-8 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <Card className="lg:col-span-1 p-10 flex flex-col items-center justify-center text-center space-y-8 relative overflow-hidden group bg-white border-slate-200">
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
           <div className="relative">
-            <div className="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full scale-150 animate-pulse" />
-            <div className="w-32 h-32 bg-black border-2 border-cyan-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl shadow-cyan-500/20">
-              <Gauge className="w-16 h-16 text-cyan-500" />
+            <div className="absolute inset-0 bg-blue-500/10 blur-3xl rounded-full scale-150" />
+            <div className="w-32 h-32 bg-slate-100 border-2 border-blue-300 rounded-full flex items-center justify-center relative z-10 shadow-md shadow-slate-200">
+              <Gauge className="w-16 h-16 text-blue-600" />
             </div>
           </div>
 
           <div className="space-y-2 relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">Compound Index</p>
-            <h2 className={`text-6xl font-black italic tracking-tighter text-slate-100`}>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-700">Compound Index</p>
+            <h2 className={`text-6xl font-black italic tracking-tighter text-slate-900`}>
               {riskScore}
             </h2>
             <Badge variant={riskLevel === 'Critical' ? 'danger' : 'primary'} className="mt-2 uppercase tracking-widest font-black">
@@ -49,21 +49,21 @@ function WeightedRiskScore() {
             </Badge>
           </div>
 
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300 leading-relaxed max-w-xs relative z-10">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-700 leading-relaxed max-w-xs relative z-10">
             Weighted algorithmic quantification of adversarial risk across all discoverable intelligence nodes.
           </p>
         </Card>
 
         {/* Factor analysis bar chart */}
-        <Card className="lg:col-span-2 p-10 space-y-8">
+        <Card className="lg:col-span-2 p-10 space-y-8 bg-white border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-black border border-white/5 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-cyan-500" />
+              <div className="p-2 bg-slate-100 border border-slate-300 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
               </div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-slate-100 italic">Weighted Factorization</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 italic">Weighted Factorization</h3>
             </div>
-            <Badge variant="outline" className="border-white/10 text-slate-500">Tier 4 Analysis</Badge>
+            <Badge variant="outline" className="border-slate-300 text-slate-600">Tier 4 Analysis</Badge>
           </div>
 
           <div className="h-[300px] w-full">
@@ -71,15 +71,15 @@ function WeightedRiskScore() {
               <BarChart data={chartData} layout="vertical" margin={{ left: 80, right: 30 }}>
                 <defs>
                   <linearGradient id="weightedGradient" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.2} />
-                    <stop offset="100%" stopColor="#06b6d4" stopOpacity={0.8} />
+                    <stop offset="0%" stopColor="#93c5fd" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.9} />
                   </linearGradient>
                 </defs>
                 <XAxis type="number" hide />
                 <YAxis
                   dataKey="name"
                   type="category"
-                  stroke="#475569"
+                  stroke="#64748b"
                   fontSize={8}
                   fontWeight="black"
                   tickLine={false}
@@ -87,13 +87,13 @@ function WeightedRiskScore() {
                   width={80}
                 />
                 <Tooltip
-                  cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
                   contentStyle={{
-                    backgroundColor: '#000000',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
                     borderRadius: '12px'
                   }}
-                  labelStyle={{ color: '#94a3b8', fontSize: '10px', textTransform: 'uppercase' }}
+                  labelStyle={{ color: '#64748b', fontSize: '10px', textTransform: 'uppercase' }}
                 />
                 <Bar dataKey="value" fill="url(#weightedGradient)" radius={[0, 4, 4, 0]} barSize={20} />
               </BarChart>
@@ -103,17 +103,17 @@ function WeightedRiskScore() {
       </div>
 
       {/* Numerical Matrix */}
-      <Card className="p-8 space-y-6">
+      <Card className="p-8 space-y-6 bg-white border-slate-200">
         <div className="flex items-center gap-3">
-          <Activity className="w-5 h-5 text-cyan-500" />
-          <h3 className="text-sm font-black uppercase tracking-widest text-slate-100">Weighted Risk Matrix</h3>
+          <Activity className="w-5 h-5 text-blue-600" />
+          <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Weighted Risk Matrix</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {chartData.map((item, i) => (
-            <div key={i} className="p-5 bg-black/40 border border-white/5 rounded-2xl space-y-3 group hover:border-cyan-500/30 transition-colors">
+            <div key={i} className="p-5 bg-slate-50 border border-slate-300 rounded-2xl space-y-3 group hover:border-blue-400 transition-colors">
               <div className="flex justify-between items-start">
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-cyan-400 transition-colors">
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-700 group-hover:text-blue-600 transition-colors">
                   {item.name}
                 </span>
                 <Badge variant={item.value > 15 ? 'danger' : 'default'} className="scale-75 origin-top-right">
@@ -121,22 +121,22 @@ function WeightedRiskScore() {
                 </Badge>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black italic tracking-tighter text-slate-100">{item.value.toFixed(1)}</span>
-                <span className="text-[10px] font-mono text-slate-400">/ 100.0</span>
+                <span className="text-2xl font-black italic tracking-tighter text-slate-900">{item.value.toFixed(1)}</span>
+                <span className="text-[10px] font-mono text-slate-600">/ 100.0</span>
               </div>
-              <div className="h-0.5 w-full bg-black/60 rounded-full overflow-hidden">
-                <div className="h-full bg-cyan-500/50" style={{ width: `${(item.value / 25) * 100}%` }} />
+              <div className="h-0.5 w-full bg-slate-300 rounded-full overflow-hidden">
+                <div className="h-full bg-blue-500" style={{ width: `${(item.value / 25) * 100}%` }} />
               </div>
             </div>
           ))}
         </div>
       </Card>
 
-      <Card className="p-8 bg-red-500/5 border-red-500/10 flex items-start gap-4">
-        <AlertTriangle className="w-6 h-6 text-red-500 shrink-0 mt-1" />
+      <Card className="p-8 bg-red-50 border-red-200 flex items-start gap-4">
+        <AlertTriangle className="w-6 h-6 text-red-600 shrink-0 mt-1" />
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-widest text-red-400">Tactical Risk Warning</h4>
-          <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest leading-relaxed">
+          <h4 className="text-xs font-black uppercase tracking-widest text-red-700">Tactical Risk Warning</h4>
+          <p className="text-[10px] text-slate-700 font-bold uppercase tracking-widest leading-relaxed">
             Your compound risk score has crossed the threshold for automated target selection by large-scale OSINT botnets.
             Immediate hardening of your "Shadow Entities" (disjointed personal and professional data points) is recommended to lower this index.
           </p>

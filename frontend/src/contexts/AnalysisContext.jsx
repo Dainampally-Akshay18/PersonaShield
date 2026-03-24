@@ -31,12 +31,23 @@ function writeHistoryToStorage(history) {
 
 export function AnalysisProvider({ children }) {
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [scrapeMetadata, setScrapeMetadata] = useState(null);
   const [analysisHistory, setAnalysisHistory] = useState(() =>
     readHistoryFromStorage(),
   );
 
-  function setAnalysis(result) {
-    setAnalysisResult(result);
+  function setAnalysis(result, metadata = null) {
+    // Handle response with both analysis and scrape_metadata
+    if (result && result.analysis && result.scrape_metadata) {
+      // URL scrape response format
+      setAnalysisResult(result.analysis);
+      setScrapeMetadata(result.scrape_metadata);
+    } else {
+      // Regular analysis response format
+      setAnalysisResult(result);
+      setScrapeMetadata(metadata);
+    }
+
     setAnalysisHistory((prev) => {
       const next = [...prev, result];
       writeHistoryToStorage(next);
@@ -46,10 +57,12 @@ export function AnalysisProvider({ children }) {
 
   function clearAnalysis() {
     setAnalysisResult(null);
+    setScrapeMetadata(null);
   }
 
   const value = {
     analysisResult,
+    scrapeMetadata,
     analysisHistory,
     setAnalysis,
     clearAnalysis,

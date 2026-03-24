@@ -3,12 +3,12 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import AttackSimulationModal from '../components/AttackSimulationModal';
 import { useAnalysis } from '../contexts/AnalysisContext';
-import { ShieldCheck, Target, Activity, Clock, ChevronRight, Zap } from 'lucide-react';
+import { ShieldCheck, Target, Activity, Clock, ChevronRight, Zap, AlertCircle, Database } from 'lucide-react';
 import { Badge, Button } from '../components/UI';
 import { motion } from 'framer-motion';
 
 function DashboardLayout() {
-  const { analysisResult } = useAnalysis();
+  const { analysisResult, scrapeMetadata } = useAnalysis();
   const [isSimulationOpen, setIsSimulationOpen] = useState(false);
 
   const analysisId = analysisResult?.analysis_id || 'ANALYSIS-T-1002';
@@ -31,24 +31,24 @@ function DashboardLayout() {
         <Sidebar />
       </aside>
 
-      <section className="flex-1 flex flex-col gap-8 animate-in fade-in slide-in-from-right-6 duration-700">
-        <header className="glass rounded-2xl p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-2 h-full bg-cyan-500/50" />
+      <section className="flex-1 flex flex-col gap-8">
+        <header className="glass rounded-2xl p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden group bg-white border-slate-200">
+          <div className="absolute top-0 left-0 w-1 h-full bg-blue-600" />
 
           <div className="space-y-4 relative z-10">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20 shadow-inner">
-                <Target className="w-6 h-6 text-cyan-500" />
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-200 shadow-sm">
+                <Target className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-100">
-                  Analysis <span className="text-cyan-500">Overview</span>
+                <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900">
+                  Analysis <span className="text-blue-600">Overview</span>
                 </h1>
                 <div className="flex items-center gap-4 mt-1">
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 uppercase tracking-widest">
-                    <Activity className="w-3 h-3 text-emerald-500" /> {analysisId}
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-600 uppercase tracking-widest">
+                    <Activity className="w-3 h-3 text-emerald-600" /> {analysisId}
                   </div>
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-600 uppercase tracking-widest">
                     <Clock className="w-3 h-3" /> {timestamp}
                   </div>
                 </div>
@@ -57,10 +57,10 @@ function DashboardLayout() {
           </div>
 
           <div className="flex items-center gap-4 relative z-10">
-            <div className="hidden lg:flex flex-col items-end gap-1 px-4 border-r border-white/5">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Global Score</p>
-              <div className="text-2xl font-mono font-black text-slate-100 flex items-baseline gap-1">
-                {riskScore} <span className="text-xs text-slate-400 font-bold">/ 100</span>
+            <div className="hidden lg:flex flex-col items-end gap-1 px-4 border-r border-slate-200">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Global Score</p>
+              <div className="text-2xl font-mono font-black text-slate-900 flex items-baseline gap-1">
+                {riskScore} <span className="text-xs text-slate-600 font-bold">/ 100</span>
               </div>
             </div>
 
@@ -68,9 +68,9 @@ function DashboardLayout() {
               <motion.div
                 animate={{
                   boxShadow: [
-                    "0 0 0px rgba(56, 189, 248, 0)",
-                    "0 0 20px rgba(56, 189, 248, 0.4)",
-                    "0 0 0px rgba(56, 189, 248, 0)"
+                    "0 0 0px rgba(59, 130, 246, 0)",
+                    "0 0 15px rgba(59, 130, 246, 0.3)",
+                    "0 0 0px rgba(59, 130, 246, 0)"
                   ]
                 }}
                 transition={{
@@ -78,20 +78,12 @@ function DashboardLayout() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="rounded-full"
+                className="p-3 bg-blue-50 rounded-xl border border-blue-200 shadow-sm"
               >
-                <Button
-                  onClick={() => setIsSimulationOpen(true)}
-                  className="gap-2 px-8 h-12 !rounded-full shadow-2xl shadow-sky-500/40 group relative overflow-hidden border-2 border-sky-400/30"
-                >
-                  <Zap className="w-4 h-4 fill-sky-400" />
-                  Simulate Adversary
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                </Button>
+                <AlertCircle className="w-6 h-6 text-blue-600" />
               </motion.div>
               <div className="flex flex-col gap-1 items-center">
-                <p className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Exposure</p>
+                <p className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-600">Exposure</p>
                 <Badge variant={getRiskColor(riskLevel)} className="px-3">
                   {riskLevel} Risk
                 </Badge>
@@ -99,6 +91,35 @@ function DashboardLayout() {
             </div>
           </div>
         </header>
+
+        {/* Scrape Metadata Card */}
+        {scrapeMetadata && (
+          <div className="glass rounded-2xl p-6 border border-slate-200 bg-white space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+                  <Database className="w-4 h-4 text-blue-600" />
+                </div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Source Intelligence</h3>
+              </div>
+              <Badge variant="primary" className="px-3">{scrapeMetadata.status}</Badge>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Source URL</p>
+                <p className="text-xs text-blue-600 font-mono truncate">{scrapeMetadata.source_url}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Content Size</p>
+                <p className="text-xs text-slate-900 font-bold">{scrapeMetadata.character_count?.toLocaleString() || 0} chars</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Status</p>
+                <p className="text-xs font-mono text-emerald-600">{scrapeMetadata.status === 'success' ? '✓ Success' : '⚠ ' + scrapeMetadata.status}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex-1">
           <Outlet />

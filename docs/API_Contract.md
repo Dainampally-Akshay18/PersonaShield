@@ -844,27 +844,5 @@ Add this under API contract:
 
 ---
 
-# Why This Works Perfectly With Agentic IDE
-
-Because now the AI only needs to:
-
-Implement functions
-Then call them sequentially
-
-No UI orchestration
-No race conditions
-No partial failures
-
----
-
-Now after adding this endpoint, your frontend becomes insanely simple:
-
-> Upload → POST /analyze → render dashboard
-
-That dramatically increases demo reliability.
-
----
-
-Next I recommend I help you design the **frontend state structure** so React doesn’t become chaos.
 
 
